@@ -12,6 +12,7 @@ import {
   Title,
 } from 'native-base';
 import DateTimePicker from 'react-native-modal-datetime-picker';
+import moment from 'moment';
 import {
   workdayCount,
   dayCount,
@@ -70,7 +71,7 @@ export default class Event extends Component<Props> {
           <Button
             onPress={this._showDateTimePicker}
           >
-            <Text>{this.state.date.toLocaleDateString('en-US', options)}</Text>
+            <Text>{moment(this.state.date).format("dddd, LL")}</Text>
           </Button>
           <Text>Total days: {dayCount(this.state.date)}</Text>
           <Text>Number of non-working days: {holidaysThru(this.state.date).length}</Text>
@@ -83,6 +84,7 @@ export default class Event extends Component<Props> {
             isVisible={this.state.isDateTimePickerVisible}
             onConfirm={this._handleDatePicked.bind(this)}
             onCancel={this._hideDateTimePicker}
+            date={this.state.date}
           />
         </Content>
       </Container>
