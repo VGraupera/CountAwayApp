@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
-import { AsyncStorage } from 'react-native';
+import {
+  AsyncStorage,
+  StyleSheet,
+} from 'react-native';
 import {
   Container,
   Header,
@@ -10,6 +13,7 @@ import {
   Body,
   Right,
   Title,
+  View,
 } from 'native-base';
 import DateTimePicker from 'react-native-modal-datetime-picker';
 import moment from 'moment';
@@ -52,7 +56,7 @@ export default class Event extends Component<Props> {
   async _handleDatePicked(date) {
     await AsyncStorage.setItem(
       'savedDate',
-        date.toISOString()
+      date.toISOString()
     );
 
     this.setState({date});
@@ -61,22 +65,37 @@ export default class Event extends Component<Props> {
 
 
   render() {
-    const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-
     return (
       <Container>
         <Content>
-          <Text>{workdayCount(this.state.date)}</Text>
-          <Text>working days until</Text>
+          <View style={{
+            flex: 1,
+            flexDirection:'column',
+            alignItems:'center',
+            justifyContent: 'center',
+            margin: 10
+          }}>
+          <Text style={styles.heading}>{workdayCount(this.state.date)}</Text>
+          <Text style={styles.text}>working days until</Text>
           <Button
+            full
+            primary
             onPress={this._showDateTimePicker}
+            style={{
+              margin: 10
+            }}
           >
             <Text>{moment(this.state.date).format("dddd, LL")}</Text>
           </Button>
-          <Text>Total days: {dayCount(this.state.date)}</Text>
-          <Text>Number of non-working days: {holidaysThru(this.state.date).length}</Text>
+          <Text style={styles.text}>Total days: {dayCount(this.state.date)}</Text>
+          <Text style={styles.text}>Number of non-working days: {holidaysThru(this.state.date).length}</Text>
           <Button
+            full
+            rounded
             onPress={this._showDaysOff}
+            style={{
+              margin: 10
+            }}
           >
             <Text>Edit</Text>
           </Button>
@@ -86,8 +105,21 @@ export default class Event extends Component<Props> {
             onCancel={this._hideDateTimePicker}
             date={this.state.date}
           />
-        </Content>
-      </Container>
+        </View>
+      </Content>
+    </Container>
     );
   }
 }
+
+const styles = StyleSheet.create({
+  heading: {
+    fontSize: 48,
+    fontWeight:'bold',
+    paddingTop:20,
+    paddingBottom:10,
+  },
+  text: {
+    fontSize: 20,
+  }
+});
